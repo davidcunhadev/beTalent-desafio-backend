@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 class AuthUserController extends Controller
 {
     /**
-     * Create a new AuthUserController instance.
+     * Cria uma nova instancia de AuthUserController.
      *
      * @return void
      */
@@ -15,24 +15,7 @@ class AuthUserController extends Controller
     }
 
     /**
-     * Get a JWT via given credentials.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function login()
-    {
-        $credentials = request(['email', 'password']);
-        $token = auth()->attempt($credentials);
-
-        if (!$token) {
-            return response()->json(['error' => 'Unauthorized'], 401);
-        }
-
-        return $this->respondWithToken($token);
-    }
-
-    /**
-     * Get the authenticated User.
+     * Obtém o usuário autenticado.
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -42,7 +25,7 @@ class AuthUserController extends Controller
     }
 
     /**
-     * Log the user out (Invalidate the token).
+     * Desconecta o usuário (Invalidar o Token).
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -54,7 +37,7 @@ class AuthUserController extends Controller
     }
 
     /**
-     * Refresh a token.
+     * Atualizar o token do usuário.
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -64,7 +47,7 @@ class AuthUserController extends Controller
     }
 
     /**
-     * Get the token array structure.
+     * Obtém um array com a estrutura do token.
      *
      * @param  string $token
      *
