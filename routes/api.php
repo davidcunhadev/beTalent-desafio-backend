@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthUserController;
+use App\Http\Controllers\ClientsController;
 use App\Http\Controllers\PublicUserController;
 
 /*
@@ -15,13 +16,26 @@ use App\Http\Controllers\PublicUserController;
 |
 */
 
-Route::prefix('/auth')->controller(AuthUserController::class)->middleware(['api'])->group(function () {
-    Route::post('logout', [AuthUserController::class, 'logout']);
-    Route::post('refresh', [AuthUserController::class, 'refresh']);
-    Route::post('me', [AuthUserController::class, 'me']);
-});
-
+/**
+ * Rotas públicas da API.
+ */
 Route::prefix('/user')->controller(PublicUserController::class)->group(function () {
     Route::post('/register', 'register');
     Route::post('/login', 'login');
+});
+
+/**
+ * Rotas autenticadas da API.
+ */
+Route::prefix('/auth')->controller(AuthUserController::class)->middleware(['api', 'validate.token'])->group(function () {
+    Route::prefix('/user')->group(function () {
+        Route::post('/logout', 'logout');
+        Route::post('/refresh', 'refresh');
+        Route::post('/me', 'me');
+    });
+
+    Route::prefix('/client')->controller(ClientsController::class)->group(function () {
+        Route::get('/', 'listAll');
+        Route::post('/register', 'register');
+    });
 });
