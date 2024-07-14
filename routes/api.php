@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthUserController;
 use App\Http\Controllers\ClientsController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PublicUserController;
 
 /*
@@ -38,5 +39,14 @@ Route::prefix('/auth')->controller(AuthUserController::class)->middleware(['api'
         Route::get('/', 'listAll');
         Route::post('/register', 'register');
         Route::put('/update/{id}', 'update');
+    });
+
+    Route::prefix('/product')->controller(ProductController::class)->group(function () {
+        Route::get('/', 'listAll');
+        Route::get('/{id}', 'show');
+        Route::post('/register', 'register');
+        Route::put('/update/{id}', 'update');
+        Route::delete('/delete/{id}', 'delete');
+        Route::patch('/restore/{id}', 'restore');
     });
 });
