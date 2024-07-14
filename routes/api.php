@@ -37,5 +37,6 @@ Route::prefix('/auth')->controller(AuthUserController::class)->middleware(['api'
     Route::prefix('/client')->controller(ClientsController::class)->group(function () {
         Route::get('/', 'listAll');
         Route::post('/register', 'register');
+        Route::put('/update/{id}', 'update');
     });
 });

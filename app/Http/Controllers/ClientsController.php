@@ -35,15 +35,15 @@ class ClientsController extends Controller
 
         try {
             $validatedData = Validator::make($request->all(), [
-                'name' => 'required|string',
+                'name' => 'required|string|regex:/^[\pL\s]+$/u',
                 'cpf' => 'required|string|size:11|regex:/^\d{11}$/',
                 'street' => 'required|string',
                 'number' => 'required|string|regex:/^\d+$/',
                 'complement' => 'nullable|string',
-                'city' => 'required|string|regex:/^[A-Za-z\s]+$/',
-                'state' => 'required|string|regex:/^[A-Za-z\s]+$/',
+                'city' => 'required|string|regex:/^[\pL\s]+$/u',
+                'state' => 'required|string|regex:/^[\pL\s]+$/u',
                 'zip_code' => 'required|string|size:8|regex:/^\d{8}$/',
-                'phone_number' => 'required|string|regex:/^\d+$/',
+                'phone_number' => 'required|string|size:11|regex:/^\d+$/',
             ]);
 
             if ($validatedData->fails()) {
@@ -102,7 +102,65 @@ class ClientsController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        DB::beginTransaction();
+
+        try {
+            $client = Client::find($id);
+
+            if ($client) {
+                $validatedData = Validator::make($request->all(), [
+                    'name' => 'string|regex:/^[\pL\s]+$/u',
+                    'cpf' => 'string|size:11|regex:/^\d{11}$/|unique:clients,cpf,' . $client->id,
+                    'street' => 'string',
+                    'number' => 'string|regex:/^\d+$/',
+                    'complement' => 'nullable|string',
+                    'city' => 'string|regex:/^[\pL\s]+$/u',
+                    'state' => 'string|regex:/^[\pL\s]+$/u',
+                    'zip_code' => 'string|size:8|regex:/^\d{8}$/',
+                    'phone_number' => 'string|size:11|regex:/^\d+$/',
+                ]);
+    
+                if ($validatedData->fails()) {
+                    return response()->json(['message' => $validatedData->errors()->first()], 422);
+                }
+    
+                $validatedData = $validatedData->validated();
+    
+                $client->update(array_filter([
+                    'name' => $validatedData['name'] ?? $client->name,
+                    'cpf' => $validatedData['cpf'] ?? $client->cpf
+                ], 'strlen'));
+        
+                $address = $client->addresses->first();
+                if ($address) {
+                    $address->update(array_filter([
+                        'street' => $validatedData['street'] ?? $address->street,
+                        'number' => $validatedData['number'] ?? $address->number,
+                        'complement' => $validatedData['complement'] ?? $address->complement,
+                        'city' => $validatedData['city'] ?? $address->city,
+                        'state' => $validatedData['state'] ?? $address->state,
+                        'zip_code' => $validatedData['zip_code'] ?? $address->zip_code,
+                    ], 'strlen'));
+                }
+
+                $phone = $client->phones->first();
+                if ($phone) {
+                    $phone->update(array_filter([
+                        'phone_number' => $validatedData['phone_number'] ?? $phone->number
+                    ], 'strlen'));
+                }
+    
+                DB::commit();
+    
+                return response()->json(['message' => 'Client updated successfully!'], 200);
+            } else {
+                return response()->json(['message' => 'Client not found!'], 404);
+            }
+    
+        } catch (QueryException $e) {
+            DB::rollBack();
+            return response()->json(['message' => 'Internal Server Error: ' . $e->getMessage()], 500); 
+        }
     }
 
     /**
