@@ -16,7 +16,7 @@ class ProductController extends Controller
     public function listAll()
     {
         try {
-            $products = Product::where('is_deleted', false)->orderBy('name', 'asc')->paginate(10);
+            $products = Product::where('deleted_at', null)->orderBy('name', 'asc')->paginate(10);
             return response()->json($products);
 
         } catch (QueryException $e) {
@@ -37,7 +37,7 @@ class ProductController extends Controller
                 'description' => 'nullable|string|min:4',
                 'price' => 'required|numeric|decimal:0,2|min:0.50',
                 'quantity' => 'nullable|integer|min:1',
-                'image_url' => 'nullable|file|image|max:2048'
+                'image_url' => 'nullable|string'
             ]);
 
             if ($validatedData->fails()) {
@@ -65,10 +65,10 @@ class ProductController extends Controller
     {
         try {
             $product = Product::find($id);
-            if ($product) {
-                return response()->json($product);
+            if (!$product) {
+                return response()->json(['message' => 'Product not found.'], 404);
             }
-            return response()->json(['message' => 'Product not found.'], 404);
+            return response()->json($product);
 
         } catch (QueryException $e) {
             return response()->json(['message' => 'Internal Server Error: ' . $e->getMessage()], 500); 
@@ -85,30 +85,30 @@ class ProductController extends Controller
         try {
             $product = Product::find($id);
 
-            if ($product) {
-                $validatedData = Validator::make($request->all(), [
-                    'name' => 'string|min:4|max:255',
-                    'description' => 'nullable|string|min:4',
-                    'price' => 'numeric|decimal:0,2|min:0.50',
-                    'quantity' => 'nullable|integer|min:1',
-                    'rating' => 'nullable|decimal:0,1|between:0.0,5.0',
-                    'image_url' => 'nullable|file|image|max:2048'
-                ]);
-    
-                if ($validatedData->fails()) {
-                    return response()->json(['message' => $validatedData->errors()->first()], 422);
-                }
-    
-                $validatedData = $validatedData->validated();
-    
-                $product->update($validatedData);
-    
-                DB::commit();
-    
-                return response()->json(['message' => 'Product updated successfully!'], 200);
-            } else {
+            if (!$product) {
                 return response()->json(['message' => 'Product not found.'], 404);
             }
+
+            $validatedData = Validator::make($request->all(), [
+                'name' => 'string|min:4|max:255',
+                'description' => 'nullable|string|min:4',
+                'price' => 'numeric|decimal:0,2|min:0.50',
+                'quantity' => 'nullable|integer|min:1',
+                'rating' => 'nullable|decimal:0,1|between:0.0,5.0',
+                'image_url' => 'nullable|string'
+            ]);
+
+            if ($validatedData->fails()) {
+                return response()->json(['message' => $validatedData->errors()->first()], 422);
+            }
+
+            $validatedData = $validatedData->validated();
+
+            $product->update($validatedData);
+
+            DB::commit();
+
+            return response()->json(['message' => 'Product updated successfully!'], 200);
 
         } catch (QueryException $e) {
             DB::rollBack();
@@ -123,13 +123,13 @@ class ProductController extends Controller
     {
         try {
             $product = Product::find($id);
-            if ($product) {
-                $product->is_deleted = true;
-                $product->save();
-
-                return response()->json(['message' => 'Product deleted successfully!'], 200);
+            if (!$product) {
+                return response()->json(['message' => 'Product not found.'], 404);
             }
-            return response()->json(['message' => 'Product not found.'], 404);
+
+            $product->delete();
+
+            return response()->json(['message' => 'Product deleted successfully!'], 200);
 
         } catch (QueryException $e) {
             return response()->json(['message' => 'Internal Server Error: ' . $e->getMessage()], 500); 
@@ -142,14 +142,14 @@ class ProductController extends Controller
     public function restore(string $id)
     {
         try {
-            $product = Product::find($id);
-            if ($product) {
-                $product->is_deleted = false;
-                $product->save();
-                
-                return response()->json(['message' => 'Product restored successfully!'], 200);
+            $product = Product::withTrashed()->find($id);
+            if (!$product) {
+                return response()->json(['message' => 'Product not found.'], 404);
             }
-            return response()->json(['message' => 'Product not found.'], 404);
+            
+            $product->restore();
+            
+            return response()->json(['message' => 'Product restored successfully!'], 200);
 
         } catch (QueryException $e) {
             return response()->json(['message' => 'Internal Server Error: ' . $e->getMessage()], 500); 

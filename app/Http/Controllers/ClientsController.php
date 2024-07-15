@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\DB;
 class ClientsController extends Controller
 {
     /**
-     * Listar todos os clientes cadastrados.
+     * Listar todos os clientes cadastrados com suas devidas informações.
      */
     public function listAll()
     {
@@ -43,7 +43,7 @@ class ClientsController extends Controller
                 'city' => 'required|string|regex:/^[\pL\s]+$/u',
                 'state' => 'required|string|regex:/^[\pL\s]+$/u',
                 'zip_code' => 'required|string|size:8|regex:/^\d{8}$/',
-                'phone_number' => 'required|string|size:11|regex:/^\d+$/',
+                'phone_number' => 'required|string|regex:/^\d{10,11}$/',
             ]);
 
             if ($validatedData->fails()) {
@@ -54,7 +54,7 @@ class ClientsController extends Controller
 
             $cpfExists = Client::where('cpf', $request->cpf)->exists();
             if ($cpfExists) {
-                return response()->json(['message' => 'There is already a client registered with this cpf.'], 409);
+                return response()->json(['message' => 'There is already a client registered with this CPF.'], 409);
             }
 
             $client = Client::create([
@@ -92,9 +92,51 @@ class ClientsController extends Controller
     /**
      * Detalhar um(a) cliente e vendas a ele(a).
      */
-    public function show(string $id)
+    public function showClientWithSales(string $id)
     {
-        //
+        try {
+            $client = Client::find($id);
+            if (!$client) {
+                return response()->json(['message' => 'Client not found.'], 404);
+            }
+
+            $clientWithSales = Client::with(['sales' => function($query) {
+                $query->orderBy('sale_date', 'desc');
+            }])->find($id);
+
+            return response()->json($clientWithSales);
+        } catch (QueryException $e) {
+            return response()->json(['message' => 'Internal Server Error: ' . $e->getMessage()], 500); 
+        }
+    }
+    /**
+     * Detalhar um(a) cliente e vendas a ele(a) com filtros de pesquisa de vendas.
+     */
+    public function showClientWithFilteredSales(Request $request, string $id)
+    {
+        try {
+            $client = Client::find($id);
+            if (!$client) {
+                return response()->json(['message' => 'Client not found.'], 404);
+            }
+
+            $month = $request->input('month');
+            $year = $request->input('year');
+
+            $clientWithFilteredSales = Client::with(['sales' => function($query) use ($month, $year) {
+                if ($month && $year) {
+                    $query->whereYear('sale_date', $year)->whereMonth('sale_date', $month);
+                } elseif ($month) {
+                    $query->whereMonth('sale_date', $month);
+                } elseif ($year) {
+                    $query->whereYear('sale_date', $year);
+                }
+            }])->find($id);
+
+            return response()->json($clientWithFilteredSales);
+        } catch (QueryException $e) {
+            return response()->json(['message' => 'Internal Server Error: ' . $e->getMessage()], 500); 
+        }
     }
 
     /**
@@ -106,56 +148,55 @@ class ClientsController extends Controller
 
         try {
             $client = Client::find($id);
-
-            if ($client) {
-                $validatedData = Validator::make($request->all(), [
-                    'name' => 'string|regex:/^[\pL\s]+$/u',
-                    'cpf' => 'string|size:11|regex:/^\d{11}$/|unique:clients,cpf,' . $client->id,
-                    'street' => 'string',
-                    'number' => 'string|regex:/^\d+$/',
-                    'complement' => 'nullable|string',
-                    'city' => 'string|regex:/^[\pL\s]+$/u',
-                    'state' => 'string|regex:/^[\pL\s]+$/u',
-                    'zip_code' => 'string|size:8|regex:/^\d{8}$/',
-                    'phone_number' => 'string|size:11|regex:/^\d+$/',
-                ]);
-    
-                if ($validatedData->fails()) {
-                    return response()->json(['message' => $validatedData->errors()->first()], 422);
-                }
-    
-                $validatedData = $validatedData->validated();
-    
-                $client->update(array_filter([
-                    'name' => $validatedData['name'] ?? $client->name,
-                    'cpf' => $validatedData['cpf'] ?? $client->cpf
-                ], 'strlen'));
-        
-                $address = $client->addresses->first();
-                if ($address) {
-                    $address->update(array_filter([
-                        'street' => $validatedData['street'] ?? $address->street,
-                        'number' => $validatedData['number'] ?? $address->number,
-                        'complement' => $validatedData['complement'] ?? $address->complement,
-                        'city' => $validatedData['city'] ?? $address->city,
-                        'state' => $validatedData['state'] ?? $address->state,
-                        'zip_code' => $validatedData['zip_code'] ?? $address->zip_code,
-                    ], 'strlen'));
-                }
-
-                $phone = $client->phones->first();
-                if ($phone) {
-                    $phone->update(array_filter([
-                        'phone_number' => $validatedData['phone_number'] ?? $phone->number
-                    ], 'strlen'));
-                }
-    
-                DB::commit();
-    
-                return response()->json(['message' => 'Client updated successfully!'], 200);
-            } else {
+            if (!$client) {
                 return response()->json(['message' => 'Client not found!'], 404);
             }
+
+            $validatedData = Validator::make($request->all(), [
+                'name' => 'string|regex:/^[\pL\s]+$/u',
+                'cpf' => 'string|size:11|regex:/^\d{11}$/|unique:clients,cpf,' . $client->id,
+                'street' => 'string',
+                'number' => 'string|regex:/^\d+$/',
+                'complement' => 'nullable|string',
+                'city' => 'string|regex:/^[\pL\s]+$/u',
+                'state' => 'string|regex:/^[\pL\s]+$/u',
+                'zip_code' => 'string|size:8|regex:/^\d{8}$/',
+                'phone_number' => 'string|size:11|regex:/^\d+$/',
+            ]);
+
+            if ($validatedData->fails()) {
+                return response()->json(['message' => $validatedData->errors()->first()], 422);
+            }
+
+            $validatedData = $validatedData->validated();
+
+            $client->update(array_filter([
+                'name' => $validatedData['name'] ?? $client->name,
+                'cpf' => $validatedData['cpf'] ?? $client->cpf
+            ], 'strlen'));
+    
+            $address = $client->addresses->first();
+            if ($address) {
+                $address->update(array_filter([
+                    'street' => $validatedData['street'] ?? $address->street,
+                    'number' => $validatedData['number'] ?? $address->number,
+                    'complement' => $validatedData['complement'] ?? $address->complement,
+                    'city' => $validatedData['city'] ?? $address->city,
+                    'state' => $validatedData['state'] ?? $address->state,
+                    'zip_code' => $validatedData['zip_code'] ?? $address->zip_code,
+                ], 'strlen'));
+            }
+
+            $phone = $client->phones->first();
+            if ($phone) {
+                $phone->update(array_filter([
+                    'phone_number' => $validatedData['phone_number'] ?? $phone->number
+                ], 'strlen'));
+            }
+
+            DB::commit();
+
+            return response()->json(['message' => 'Client updated successfully!'], 200);
     
         } catch (QueryException $e) {
             DB::rollBack();
@@ -166,8 +207,19 @@ class ClientsController extends Controller
     /**
      * Excluir um(a) cliente e vendas a ele(a).
      */
-    public function destroy(string $id)
+    public function delete(string $id)
     {
-        //
+        try {
+            $client = Client::find($id);
+            if (!$client) {
+                return response()->json(['message' => 'Client not found.'], 404);
+            }
+
+            $client->delete();
+            
+            return response()->json(['message' => 'Client deleted successfully!'], 200);
+        } catch (QueryException $e) {
+            return response()->json(['message' => 'Internal Server Error: ' . $e->getMessage()], 500); 
+        }
     }
 }

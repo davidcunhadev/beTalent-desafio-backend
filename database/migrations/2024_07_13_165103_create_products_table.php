@@ -19,7 +19,7 @@ return new class extends Migration
             $table->integer('quantity')->default(1);
             $table->decimal('rating', 3, 1)->default(0.0);
             $table->string('image_url')->nullable();
-            $table->boolean('is_deleted')->default(false);
+            $table->softDeletes();
             $table->timestamps();
         });
     }
