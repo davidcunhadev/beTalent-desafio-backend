@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthUserController;
 use App\Http\Controllers\ClientsController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PublicUserController;
+use App\Http\Controllers\SaleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,8 +38,11 @@ Route::prefix('/auth')->controller(AuthUserController::class)->middleware(['api'
 
     Route::prefix('/client')->controller(ClientsController::class)->group(function () {
         Route::get('/', 'listAll');
+        Route::get('/{id}', 'showClientWithSales');
+        Route::get('/{id}/sales', 'showClientWithFilteredSales');
         Route::post('/register', 'register');
         Route::put('/update/{id}', 'update');
+        Route::delete('/delete/{id}', 'delete');
     });
 
     Route::prefix('/product')->controller(ProductController::class)->group(function () {
@@ -48,5 +52,9 @@ Route::prefix('/auth')->controller(AuthUserController::class)->middleware(['api'
         Route::put('/update/{id}', 'update');
         Route::delete('/delete/{id}', 'delete');
         Route::patch('/restore/{id}', 'restore');
+    });
+
+    Route::prefix('/sale')->controller(SaleController::class)->group(function () {
+        Route::post('/register', 'register');
     });
 });
