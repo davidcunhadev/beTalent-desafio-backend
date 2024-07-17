@@ -125,11 +125,11 @@ class ClientsController extends Controller
 
             $clientWithFilteredSales = Client::with(['sales' => function($query) use ($month, $year) {
                 if ($month && $year) {
-                    $query->whereYear('sale_date', $year)->whereMonth('sale_date', $month);
+                    $query->whereYear('sale_date', $year)->whereMonth('sale_date', $month)->orderBy('sale_date', 'desc');
                 } elseif ($month) {
-                    $query->whereMonth('sale_date', $month);
+                    $query->whereMonth('sale_date', $month)->orderBy('sale_date', 'desc');
                 } elseif ($year) {
-                    $query->whereYear('sale_date', $year);
+                    $query->whereYear('sale_date', $year)->orderBy('sale_date', 'desc');
                 }
             }])->find($id);
 

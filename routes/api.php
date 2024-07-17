@@ -33,10 +33,10 @@ Route::prefix('/auth')->controller(AuthUserController::class)->middleware(['api'
     Route::prefix('/user')->group(function () {
         Route::post('/logout', 'logout');
         Route::post('/refresh', 'refresh');
-        Route::post('/me', 'me');
+        Route::get('/me', 'me');
     });
 
-    Route::prefix('/client')->controller(ClientsController::class)->group(function () {
+    Route::prefix('/clients')->controller(ClientsController::class)->group(function () {
         Route::get('/', 'listAll');
         Route::get('/{id}', 'showClientWithSales');
         Route::get('/{id}/sales', 'showClientWithFilteredSales');
@@ -45,7 +45,7 @@ Route::prefix('/auth')->controller(AuthUserController::class)->middleware(['api'
         Route::delete('/delete/{id}', 'delete');
     });
 
-    Route::prefix('/product')->controller(ProductController::class)->group(function () {
+    Route::prefix('/products')->controller(ProductController::class)->group(function () {
         Route::get('/', 'listAll');
         Route::get('/{id}', 'show');
         Route::post('/register', 'register');
@@ -54,7 +54,7 @@ Route::prefix('/auth')->controller(AuthUserController::class)->middleware(['api'
         Route::patch('/restore/{id}', 'restore');
     });
 
-    Route::prefix('/sale')->controller(SaleController::class)->group(function () {
+    Route::prefix('/sales')->controller(SaleController::class)->group(function () {
         Route::post('/register', 'register');
     });
 });
