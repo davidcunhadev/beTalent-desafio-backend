@@ -84,9 +84,14 @@ class ProductController extends Controller
 
         try {
             $product = Product::find($id);
-
             if (!$product) {
                 return response()->json(['message' => 'Product not found.'], 404);
+            }
+
+            $requestData = $request->only(['name', 'description', 'price', 'quantity', 'image_url']);
+
+            if (empty(array_filter($requestData))) {
+                return response()->json(['message' => 'At least one field must be provided for update!'], 422);
             }
 
             $validatedData = Validator::make($request->all(), [
@@ -147,6 +152,9 @@ class ProductController extends Controller
                 return response()->json(['message' => 'Product not found.'], 404);
             }
             
+            if ($product->deleted_at === null) {
+                return response()->json(['message' => 'The product is not deleted. No restoration needed.'], 200);
+            }
             $product->restore();
             
             return response()->json(['message' => 'Product restored successfully!'], 200);
