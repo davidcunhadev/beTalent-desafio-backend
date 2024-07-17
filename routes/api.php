@@ -38,8 +38,7 @@ Route::prefix('/auth')->controller(AuthUserController::class)->middleware(['api'
 
     Route::prefix('/clients')->controller(ClientsController::class)->group(function () {
         Route::get('/', 'listAll');
-        Route::get('/{id}', 'showClientWithSales');
-        Route::get('/{id}/sales', 'showClientWithFilteredSales');
+        Route::get('/{id}', 'show');
         Route::post('/register', 'register');
         Route::put('/update/{id}', 'update');
         Route::delete('/delete/{id}', 'delete');

@@ -88,31 +88,11 @@ class ClientsController extends Controller
             return response()->json(['message' => 'Internal Server Error: ' . $e->getMessage()], 500); 
         }
     }
-
+    
     /**
-     * Detalhar um(a) cliente e vendas a ele(a).
+     * Detalhar um(a) cliente e vendas a ele(a) com possibilidade de filtrar vendas por mes/ano.
      */
-    public function showClientWithSales(string $id)
-    {
-        try {
-            $client = Client::find($id);
-            if (!$client) {
-                return response()->json(['message' => 'Client not found.'], 404);
-            }
-
-            $clientWithSales = Client::with(['sales' => function($query) {
-                $query->orderBy('sale_date', 'desc');
-            }])->find($id);
-
-            return response()->json($clientWithSales);
-        } catch (QueryException $e) {
-            return response()->json(['message' => 'Internal Server Error: ' . $e->getMessage()], 500); 
-        }
-    }
-    /**
-     * Detalhar um(a) cliente e vendas a ele(a) com filtros de pesquisa de vendas.
-     */
-    public function showClientWithFilteredSales(Request $request, string $id)
+    public function show(Request $request, string $id)
     {
         try {
             $client = Client::find($id);
@@ -130,6 +110,8 @@ class ClientsController extends Controller
                     $query->whereMonth('sale_date', $month)->orderBy('sale_date', 'desc');
                 } elseif ($year) {
                     $query->whereYear('sale_date', $year)->orderBy('sale_date', 'desc');
+                } else {
+                    $query->orderBy('sale_date', 'desc');
                 }
             }])->find($id);
 
@@ -152,6 +134,15 @@ class ClientsController extends Controller
                 return response()->json(['message' => 'Client not found!'], 404);
             }
 
+            $requestData = $request->only([
+                'name', 'cpf', 'street', 'number', 'complement', 
+                'city', 'state', 'zip_code', 'phone_number'
+            ]);
+
+            if (empty(array_filter($requestData))) {
+                return response()->json(['message' => 'At least one field must be provided for update!'], 422);
+            }
+
             $validatedData = Validator::make($request->all(), [
                 'name' => 'string|regex:/^[\pL\s]+$/u',
                 'cpf' => 'string|size:11|regex:/^\d{11}$/|unique:clients,cpf,' . $client->id,
@@ -161,7 +152,7 @@ class ClientsController extends Controller
                 'city' => 'string|regex:/^[\pL\s]+$/u',
                 'state' => 'string|regex:/^[\pL\s]+$/u',
                 'zip_code' => 'string|size:8|regex:/^\d{8}$/',
-                'phone_number' => 'string|size:11|regex:/^\d+$/',
+                'phone_number' => 'string|size:11|regex:/^\d+$/|unique:phones,phone_number,' . $client->phones->first()->id,                
             ]);
 
             if ($validatedData->fails()) {
