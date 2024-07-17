@@ -57,7 +57,7 @@ Para executar o projeto localmente, siga os passos abaixo:
 1. Clone o repositório:
 
 ```
- git@github.com:davidcunhadev/teste-tecnico-backend-betalent.git
+ git clone git@github.com:davidcunhadev/teste-tecnico-backend-betalent.git
 ```
 
 2. Vá para a pasta do projeto:
@@ -67,25 +67,57 @@ cd teste-tecnico-backend-betalent
 ```
 
 3. Instale as dependências do projeto:
+   
 ```
 composer install
 ```
 
-4. Suba os containers do projeto com o comando:
+4. Configurar o arquivo de ambiente (.env):
+   
+```
+cp .env.example .env
+```
+
+5. Gerar a chave JWT_SECRET:
+   
+```
+php artisan jwt:secret
+```
+
+6. Gere a chave de aplicação:
+   
+```
+php artisan key:generate
+```
+
+7. Suba os containers do projeto com o comando:
+   
 ```
 sail up -d
 ```
 
-5. Rode o seguinte comando para subir a aplicação no ar:
+8. Rode o seguinte comando para subir a aplicação no ar:
+   
 ```
 sail artisan serve
 ```
 
-6. Após isso, você poderá fazer as requisições seguindo os passos da seção logo abaixo.
+9. Utilizando a extensão Database Client do VSCode, por exemplo, crie a conexão com o DB:
+
+    | Chave   | Valor    
+    | :---------- | :--------- |
+    | `Host` | 127.0.0.1 |
+    | `Username` | root |
+    | `Port` | 3307 |
+    | `Password` | password |
+
+10. Após isso, você poderá fazer as requisições seguindo os passos da seção logo abaixo.
 
 <br>
 
 ## 📑 Documentação da API
+
+<p></p>
 
 <details>
 <summary><strong>Funcionalidades dos usuários em rotas públicas.</strong></summary>
