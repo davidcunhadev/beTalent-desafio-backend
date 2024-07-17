@@ -1,7 +1,20 @@
-<h1 align="center">Teste Técnico BeTalent</h1>
+<h1>Desafio Técnico Backend BeTalent</h1>
 
-<p align="center">O Teste Técnico Back-end da BeTalent consiste em estruturar uma API RESTful conectada a um banco de dados.</p>
-<p align="center">Trata-se de um sistema que permite cadastrar usuários externos. Ao realizarem login, estes usuários deverão poder registrar clientes, produtos e vendas.</p>
+## Descrição
+<p>O objetivo deste desafio consiste em estruturar uma API RESTful conectada a um banco de dados. Trata-se de um sistema que permite cadastrar usuários externos. Ao realizarem login, estes usuários podem registrar clientes, produtos e vendas.</p>
+
+## Pré-requisitos
+- Estruturar o sistema observando o MVC (porém, sem as views);
+- Usar MySQL como banco de dados;
+- Respostas devem ser em JSON;
+
+## Tecnologias Utilizadas
+![Laravel](https://img.shields.io/badge/Laravel-v10-FF2D20?style=for-the-badge&logo=laravel&logoColor=FF4A4A)
+![MySQL](https://img.shields.io/badge/MySQL-73618F?style=for-the-badge&logo=mysql&logoColor=white)
+![JWT](https://img.shields.io/badge/JWT-black?style=for-the-badge&logo=JSON%20web%20tokens)
+![Eloquent](https://img.shields.io/badge/eloquent-ff5733?style=for-the-badge&color=FE2D20)
+
+<hr>
 
 ## 🎲 Banco de Dados
 
@@ -13,6 +26,8 @@
 - telefones: id, client_id, phone_number;
 - produtos: id, nome, description, price, quantity, rating, image_url;
 - vendas: id, client_id, product_id, quantity, unit_price, total_price, sale_date;
+
+<br>
 
 ## ✨ Funcionalidades
 - Cadastro de usuário do sistema.
@@ -31,7 +46,11 @@
 
 <p><strong>Observação</strong>: as rotas de clientes, produtos e vendas são apenas acessadas por usuário <strong>autenticado</strong>.</p>
 
-## ⚙️ Como Usar
+<br>
+
+## ⚙️ Executando a aplicação
+
+Para executar o projeto localmente, siga os passos abaixo:
 
 ### Instalação
 
@@ -506,5 +525,239 @@ sail artisan serve
       "to": 2,
       "total": 2
     }
+
+- #### Detalhes de um(a) cliente e vendas mais recentes relacionados à ele(a) na rota /api/auth/clients/id
+
+<code>GET</code> <code>/api/auth/clients/id</code>
+
+| Headers   | Tipo       | Descrição                           |
+| :---------- | :--------- | :---------------------------------- |
+| `Accept` | `application/json` | **Obrigatório** ->  Tipos de mídia a processar e receber como resposta |
+| `Content-Type` | `application/json` | **Obrigatório** -> Tipo de mídia dos dados que estão sendo enviados na requisição |
+| `Authorization` | `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...` | **Obrigatório** -> Seu token gerado no login |
+
+| Parâmetro via Request   | Tipo       | Descrição                           |
+| :---------- | :--------- | :---------------------------------- |
+| `id` | `string` | **Obrigatório** ->  ID do cliente a ser detalhado |
+
+#### Exemplo de retorno
+
+<p>Status: 200 OK</p>
+
+    {
+      "id": 1,
+      "name": "Silvio",
+      "cpf": "09876543100",
+      "created_at": "2024-07-15T21:08:42.000000Z",
+      "updated_at": "2024-07-15T21:21:06.000000Z",
+      "sales": [
+        {
+          "id": 1,
+          "client_id": 1,
+          "product_id": 1,
+          "quantity": 1,
+          "unit_price": "2199.99",
+          "total_price": "2199.99",
+          "sale_date": "2024-07-16 22:49:32",
+          "created_at": "2024-07-16T22:49:32.000000Z",
+          "updated_at": "2024-07-16T22:49:32.000000Z"
+        },
+        {
+          "id": 2,
+          "client_id": 1,
+          "product_id": 3,
+          "quantity": 3,
+          "unit_price": "4999.99",
+          "total_price": "14999,97",
+          "sale_date": "2024-07-16 22:49:17",
+          "created_at": "2024-07-16T22:49:17.000000Z",
+          "updated_at": "2024-07-16T22:49:17.000000Z"
+        }
+      ]
+    }
+
+- #### Detalhes de um(a) cliente e vendas filtradas por mês/ano relacionados à ele(a) na rota /api/auth/clients/id/sales
+
+<code>GET</code> <code>/api/auth/clients/id/sales</code>
+
+| Headers   | Tipo       | Descrição                           |
+| :---------- | :--------- | :---------------------------------- |
+| `Accept` | `application/json` | **Obrigatório** ->  Tipos de mídia a processar e receber como resposta |
+| `Content-Type` | `application/json` | **Obrigatório** -> Tipo de mídia dos dados que estão sendo enviados na requisição |
+| `Authorization` | `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...` | **Obrigatório** -> Seu token gerado no login |
+
+| Parâmetro via Request   | Tipo       | Descrição                           |
+| :---------- | :--------- | :---------------------------------- |
+| `id` | `string` | **Obrigatório** ->  ID do cliente a ser detalhado |
+
+| Parâmetro via Query   | Tipo       | Descrição                           |
+| :---------- | :--------- | :---------------------------------- |
+| `year` | `string` | **Não Obrigatório** ->  Ano da venda |
+| `month` | `string` | **Não Obrigatório** ->  Mês da venda |
+
+#### Exemplo de retorno
+
+<p>Status: 200 OK</p>
+
+    {
+      "id": 1,
+      "name": "Silvio",
+      "cpf": "09876543100",
+      "created_at": "2024-07-15T21:08:42.000000Z",
+      "updated_at": "2024-07-15T21:21:06.000000Z",
+      "sales": [
+        {
+          "id": 1,
+          "client_id": 1,
+          "product_id": 1,
+          "quantity": 1,
+          "unit_price": "2199.99",
+          "total_price": "2199.99",
+          "sale_date": "2024-07-16 22:49:32",
+          "created_at": "2024-07-16T22:49:32.000000Z",
+          "updated_at": "2024-07-16T22:49:32.000000Z"
+        },
+        {
+          "id": 2,
+          "client_id": 1,
+          "product_id": 3,
+          "quantity": 3,
+          "unit_price": "4999.99",
+          "total_price": "14999,97",
+          "sale_date": "2024-07-16 22:49:17",
+          "created_at": "2024-07-16T22:49:17.000000Z",
+          "updated_at": "2024-07-16T22:49:17.000000Z"
+        }
+      ]
+    }
+
+- #### Registrar um(a) cliente na rota /api/auth/clients/register
+
+<code>POST</code> <code>/api/auth/clients/register</code>
+
+| Headers   | Tipo       | Descrição                           |
+| :---------- | :--------- | :---------------------------------- |
+| `Accept` | `application/json` | **Obrigatório** ->  Tipos de mídia a processar e receber como resposta |
+| `Content-Type` | `application/json` | **Obrigatório** -> Tipo de mídia dos dados que estão sendo enviados na requisição |
+| `Authorization` | `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...` | **Obrigatório** -> Seu token gerado no login |
+
+| Parâmetro via Body   | Tipo       | Descrição                           |
+| :---------- | :--------- | :---------------------------------- |
+| `name` | `string` | **Obrigatório** ->  Nome do cliente |
+| `cpf` | `string` | **Obrigatório** ->  CPF do cliente |
+| `street` | `string` | **Obrigatório** ->  Rua do cliente |
+| `complement` | `string` | **Não Obrigatório** ->  Complemento do cliente |
+| `number` | `string` | **Obrigatório** ->  Número Residencial do cliente |
+| `city` | `string` | **Obrigatório** ->  Cidade do cliente |
+| `state` | `string` | **Obrigatório** ->  Estado do cliente |
+| `zip_code` | `string` | **Obrigatório** ->  CEP do cliente |
+| `phone_number` | `string` | **Obrigatório** ->  Número de Telefone do cliente |
+
+#### Exemplo de retorno
+
+<p>Status: 201 Created</p>
+
+    {
+      "message": "Client created successfully!"
+    }
+
+- #### Editar um(a) cliente na rota /api/auth/clients/update/id
+
+<code>PUT</code> <code>/api/auth/clients/update/id</code>
+
+| Headers   | Tipo       | Descrição                           |
+| :---------- | :--------- | :---------------------------------- |
+| `Accept` | `application/json` | **Obrigatório** ->  Tipos de mídia a processar e receber como resposta |
+| `Content-Type` | `application/json` | **Obrigatório** -> Tipo de mídia dos dados que estão sendo enviados na requisição |
+| `Authorization` | `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...` | **Obrigatório** -> Seu token gerado no login |
+
+| Parâmetro via Request   | Tipo       | Descrição                           |
+| :---------- | :--------- | :---------------------------------- |
+| `id` | `string` | **Obrigatório** ->  ID do cliente a ser editado |
+
+| Parâmetro via Body   | Tipo       | Descrição                           |
+| :---------- | :--------- | :---------------------------------- |
+| `name` | `string` | **Não Obrigatório** ->  Nome do cliente |
+| `cpf` | `string` | **Não Obrigatório** ->  CPF do cliente |
+| `street` | `string` | **Não Obrigatório** ->  Rua do cliente |
+| `complement` | `string` | **Não Obrigatório** ->  Complemento do cliente |
+| `number` | `string` | **Não Obrigatório** ->  Número Residencial do cliente |
+| `city` | `string` | **Não Obrigatório** ->  Cidade do cliente |
+| `state` | `string` | **Não Obrigatório** ->  Estado do cliente |
+| `zip_code` | `string` | **Não Obrigatório** ->  CEP do cliente |
+| `phone_number` | `string` | **Não Obrigatório** ->  Número de Telefone do cliente |
+
+#### Exemplo de retorno
+
+<p>Status: 200 OK</p>
+
+    {
+      "message": "Client updated successfully!"
+    }
+
+- #### Excluir um(a) cliente na rota /api/auth/clients/delete/id
+
+<code>DELETE</code> <code>/api/auth/clients/delete/id</code>
+
+| Headers   | Tipo       | Descrição                           |
+| :---------- | :--------- | :---------------------------------- |
+| `Accept` | `application/json` | **Obrigatório** ->  Tipos de mídia a processar e receber como resposta |
+| `Content-Type` | `application/json` | **Obrigatório** -> Tipo de mídia dos dados que estão sendo enviados na requisição |
+| `Authorization` | `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...` | **Obrigatório** -> Seu token gerado no login |
+
+| Parâmetro via Request   | Tipo       | Descrição                           |
+| :---------- | :--------- | :---------------------------------- |
+| `id` | `string` | **Obrigatório** ->  ID do cliente a ser excluído |
+
+#### Exemplo de retorno
+
+<p>Status: 200 OK</p>
+
+    {
+      "message": "Client deleted successfully!"
+    }
     
 </details>
+
+<hr>
+
+<details>
+<summary><strong>Funcionalidade das vendas.</strong></summary>
+
+- #### Registrar uma venda na rota /api/auth/sales/register
+
+<code>POST</code> <code>/api/auth/sales/register</code>
+
+| Headers   | Tipo       | Descrição                           |
+| :---------- | :--------- | :---------------------------------- |
+| `Accept` | `application/json` | **Obrigatório** ->  Tipos de mídia a processar e receber como resposta |
+| `Content-Type` | `application/json` | **Obrigatório** -> Tipo de mídia dos dados que estão sendo enviados na requisição |
+| `Authorization` | `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...` | **Obrigatório** -> Seu token gerado no login |
+
+| Parâmetros Body   | Tipo       | Descrição                           |
+| :---------- | :--------- | :---------------------------------- |
+| `client_id` | `string` | **Obrigatório** -> ID do cliente comprador |
+| `product_id` | `string` | **Obrigatório** -> ID do produto a ser comprado |
+| `quantity` | `string` | **Obrigatório** -> Quantidade do produto a ser comprado |
+
+#### Exemplo de retorno
+
+<p>Status: 201 Created</p>
+
+    {
+      "message": "Sale registered successfully!"
+    }
+    
+</details>
+
+<br>
+
+## Autor
+
+David Luís da Cunha
+
+<hr>
+
+## 📫 Contato
+[![Linkedin](https://img.shields.io/badge/linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/davidlcunha/)
+[![Email](https://img.shields.io/badge/Microsoft_Outlook-0078D4?style=for-the-badge&logo=microsoft-outlook&logoColor=white)](mailto:contatodavidcunha@hotmail.com)
