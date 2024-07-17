@@ -122,6 +122,24 @@ sail artisan serve
 <details>
 <summary><strong>Funcionalidades dos usuários em rotas públicas.</strong></summary>
 
+- #### Criar conta na rota /api/user/register
+
+<code>POST</code> <code>/api/user/register</code>
+
+
+| Parâmetros Body   | Tipo       | Descrição                           |
+| :---------- | :--------- | :---------------------------------- |
+| `email` | `string` | **Obrigatório** -> Email da sua conta |
+| `password` | `string` | **Obrigatório** -> Senha da sua conta |
+
+#### Exemplo de retorno
+
+<p>Status: 201 Created</p>
+    
+    {
+      "message": "User created successfully!"
+    }
+
 - #### Logar na rota /api/user/login
 
 <code>POST</code> <code>/api/user/login</code>
@@ -139,25 +157,6 @@ sail artisan serve
       "access_token": eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL3VzZXIvbG9naW4iLCJpYXQiOjE3MjEwNzY3NDUsImV4cCI6MTcyMTA4MDM0NSwibmJmIjoxNzIxMDc2NzQ1LCJqdGkiOiIwMElOb001clB0blBPWHBWIiwic3ViIjoiMSIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.WnXO02SzAq2dVbAv7HqTpYEHjGgfyT0Kv_mRZVO2C5c",
       "token_type": "bearer",
       "expires_in": 3600
-    }
-
-
-- #### Criar conta na rota /api/user/register
-
-<code>POST</code> <code>/api/user/register</code>
-
-
-| Parâmetros Body   | Tipo       | Descrição                           |
-| :---------- | :--------- | :---------------------------------- |
-| `email` | `string` | **Obrigatório** -> Email da sua conta |
-| `password` | `string` | **Obrigatório** -> Senha da sua conta |
-
-#### Exemplo de retorno
-
-<p>Status: 201 Created</p>
-    
-    {
-      "message": "User created successfully!"
     }
     
 </details>
@@ -232,6 +231,32 @@ sail artisan serve
 
 <details>
 <summary><strong>Funcionalidades dos produtos.</strong></summary>
+
+- #### Registrar produto na rota /api/auth/products/register
+
+<code>POST</code> <code>/api/auth/products/register</code>
+
+| Headers   | Tipo       | Descrição                           |
+| :---------- | :--------- | :---------------------------------- |
+| `Accept` | `application/json` | **Obrigatório** ->  Tipos de mídia a processar e receber como resposta |
+| `Content-Type` | `application/json` | **Obrigatório** -> Tipo de mídia dos dados que estão sendo enviados na requisição |
+| `Authorization` | `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...` | **Obrigatório** -> Seu token gerado no login |
+
+| Parâmetros Body   | Tipo       | Descrição                           |
+| :---------- | :--------- | :---------------------------------- |
+| `name` | `string` | **Obrigatório** ->  Nome do produto |
+| `description` | `number` | **Não Obrigatório** -> Descrição do produto |
+| `price` | `number` | **Obrigatório** -> Preço do produto |
+| `quantity` | `number` | **Não Obrigatório** -> Quantidade do produto |
+| `image_url` | `string` | **Não Obrigatório** -> Imagem do produto |
+
+#### Exemplo de retorno
+
+<p>Status: 201 Created</p>
+
+    {
+      "message": "Product created successfully!"
+    }
 
 - #### Listar todos os produtos ordenados alfabeticamente na rota /api/auth/products/
 
@@ -314,32 +339,6 @@ sail artisan serve
       "prev_page_url": null,
       "to": 3,
       "total": 3
-    }
-
-- #### Registrar produto na rota /api/auth/products/register
-
-<code>POST</code> <code>/api/auth/products/register</code>
-
-| Headers   | Tipo       | Descrição                           |
-| :---------- | :--------- | :---------------------------------- |
-| `Accept` | `application/json` | **Obrigatório** ->  Tipos de mídia a processar e receber como resposta |
-| `Content-Type` | `application/json` | **Obrigatório** -> Tipo de mídia dos dados que estão sendo enviados na requisição |
-| `Authorization` | `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...` | **Obrigatório** -> Seu token gerado no login |
-
-| Parâmetros Body   | Tipo       | Descrição                           |
-| :---------- | :--------- | :---------------------------------- |
-| `name` | `string` | **Obrigatório** ->  Nome do produto |
-| `description` | `number` | **Não Obrigatório** -> Descrição do produto |
-| `price` | `number` | **Obrigatório** -> Preço do produto |
-| `quantity` | `number` | **Não Obrigatório** -> Quantidade do produto |
-| `image_url` | `string` | **Não Obrigatório** -> Imagem do produto |
-
-#### Exemplo de retorno
-
-<p>Status: 201 Created</p>
-
-    {
-      "message": "Product created successfully!"
     }
 
 - #### Detalhes de um produto na rota /api/auth/products/id
@@ -455,6 +454,36 @@ sail artisan serve
 <details>
 <summary><strong>Funcionalidades dos clientes.</strong></summary>
 
+- #### Registrar um(a) cliente na rota /api/auth/clients/register
+
+<code>POST</code> <code>/api/auth/clients/register</code>
+
+| Headers   | Tipo       | Descrição                           |
+| :---------- | :--------- | :---------------------------------- |
+| `Accept` | `application/json` | **Obrigatório** ->  Tipos de mídia a processar e receber como resposta |
+| `Content-Type` | `application/json` | **Obrigatório** -> Tipo de mídia dos dados que estão sendo enviados na requisição |
+| `Authorization` | `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...` | **Obrigatório** -> Seu token gerado no login |
+
+| Parâmetro via Body   | Tipo       | Descrição                           |
+| :---------- | :--------- | :---------------------------------- |
+| `name` | `string` | **Obrigatório** ->  Nome do cliente |
+| `cpf` | `string` | **Obrigatório** ->  CPF do cliente |
+| `street` | `string` | **Obrigatório** ->  Rua do cliente |
+| `complement` | `string` | **Não Obrigatório** ->  Complemento do cliente |
+| `number` | `string` | **Obrigatório** ->  Número Residencial do cliente |
+| `city` | `string` | **Obrigatório** ->  Cidade do cliente |
+| `state` | `string` | **Obrigatório** ->  Estado do cliente |
+| `zip_code` | `string` | **Obrigatório** ->  CEP do cliente |
+| `phone_number` | `string` | **Obrigatório** ->  Número de Telefone do cliente |
+
+#### Exemplo de retorno
+
+<p>Status: 201 Created</p>
+
+    {
+      "message": "Client created successfully!"
+    }
+
 - #### Listar todos os clientes ordenados por ID na rota /api/auth/clients/
 
 <code>GET</code> <code>/api/auth/clients/</code>
@@ -558,7 +587,7 @@ sail artisan serve
       "total": 2
     }
 
-- #### Detalhes de um(a) cliente e vendas mais recentes relacionados à ele(a) na rota /api/auth/clients/id
+- #### Detalhar um(a) cliente e vendas a ele(a) com possibilidade de filtrar vendas por mes/ano na rota /api/auth/clients/id.
 
 <code>GET</code> <code>/api/auth/clients/id</code>
 
@@ -572,60 +601,10 @@ sail artisan serve
 | :---------- | :--------- | :---------------------------------- |
 | `id` | `string` | **Obrigatório** ->  ID do cliente a ser detalhado |
 
-#### Exemplo de retorno
-
-<p>Status: 200 OK</p>
-
-    {
-      "id": 1,
-      "name": "Silvio",
-      "cpf": "09876543100",
-      "created_at": "2024-07-15T21:08:42.000000Z",
-      "updated_at": "2024-07-15T21:21:06.000000Z",
-      "sales": [
-        {
-          "id": 1,
-          "client_id": 1,
-          "product_id": 1,
-          "quantity": 1,
-          "unit_price": "2199.99",
-          "total_price": "2199.99",
-          "sale_date": "2024-07-16 22:49:32",
-          "created_at": "2024-07-16T22:49:32.000000Z",
-          "updated_at": "2024-07-16T22:49:32.000000Z"
-        },
-        {
-          "id": 2,
-          "client_id": 1,
-          "product_id": 3,
-          "quantity": 3,
-          "unit_price": "4999.99",
-          "total_price": "14999,97",
-          "sale_date": "2024-07-16 22:49:17",
-          "created_at": "2024-07-16T22:49:17.000000Z",
-          "updated_at": "2024-07-16T22:49:17.000000Z"
-        }
-      ]
-    }
-
-- #### Detalhes de um(a) cliente e vendas filtradas por mês/ano relacionados à ele(a) na rota /api/auth/clients/id/sales
-
-<code>GET</code> <code>/api/auth/clients/id/sales</code>
-
-| Headers   | Tipo       | Descrição                           |
-| :---------- | :--------- | :---------------------------------- |
-| `Accept` | `application/json` | **Obrigatório** ->  Tipos de mídia a processar e receber como resposta |
-| `Content-Type` | `application/json` | **Obrigatório** -> Tipo de mídia dos dados que estão sendo enviados na requisição |
-| `Authorization` | `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...` | **Obrigatório** -> Seu token gerado no login |
-
-| Parâmetro via Request   | Tipo       | Descrição                           |
-| :---------- | :--------- | :---------------------------------- |
-| `id` | `string` | **Obrigatório** ->  ID do cliente a ser detalhado |
-
 | Parâmetro via Query   | Tipo       | Descrição                           |
 | :---------- | :--------- | :---------------------------------- |
-| `year` | `string` | **Não Obrigatório** ->  Ano da venda |
 | `month` | `string` | **Não Obrigatório** ->  Mês da venda |
+| `year` | `string` | **Não Obrigatório** ->  Ano da venda |
 
 #### Exemplo de retorno
 
@@ -661,36 +640,6 @@ sail artisan serve
           "updated_at": "2024-07-16T22:49:17.000000Z"
         }
       ]
-    }
-
-- #### Registrar um(a) cliente na rota /api/auth/clients/register
-
-<code>POST</code> <code>/api/auth/clients/register</code>
-
-| Headers   | Tipo       | Descrição                           |
-| :---------- | :--------- | :---------------------------------- |
-| `Accept` | `application/json` | **Obrigatório** ->  Tipos de mídia a processar e receber como resposta |
-| `Content-Type` | `application/json` | **Obrigatório** -> Tipo de mídia dos dados que estão sendo enviados na requisição |
-| `Authorization` | `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...` | **Obrigatório** -> Seu token gerado no login |
-
-| Parâmetro via Body   | Tipo       | Descrição                           |
-| :---------- | :--------- | :---------------------------------- |
-| `name` | `string` | **Obrigatório** ->  Nome do cliente |
-| `cpf` | `string` | **Obrigatório** ->  CPF do cliente |
-| `street` | `string` | **Obrigatório** ->  Rua do cliente |
-| `complement` | `string` | **Não Obrigatório** ->  Complemento do cliente |
-| `number` | `string` | **Obrigatório** ->  Número Residencial do cliente |
-| `city` | `string` | **Obrigatório** ->  Cidade do cliente |
-| `state` | `string` | **Obrigatório** ->  Estado do cliente |
-| `zip_code` | `string` | **Obrigatório** ->  CEP do cliente |
-| `phone_number` | `string` | **Obrigatório** ->  Número de Telefone do cliente |
-
-#### Exemplo de retorno
-
-<p>Status: 201 Created</p>
-
-    {
-      "message": "Client created successfully!"
     }
 
 - #### Editar um(a) cliente na rota /api/auth/clients/update/id
