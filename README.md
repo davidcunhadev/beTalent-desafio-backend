@@ -57,7 +57,7 @@ Para executar o projeto localmente, siga os passos abaixo:
 1. Clone o repositório:
 
 ```
- git clone git@github.com:davidcunhadev/teste-tecnico-backend-betalent.git
+ git clone git@github.com:davidcunhadev/beTalent-desafio-backend.git
 ```
 
 2. Vá para a pasta do projeto:
