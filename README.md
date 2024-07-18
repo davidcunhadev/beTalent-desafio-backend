@@ -117,12 +117,10 @@ sail artisan serve
 
 ## 📑 Documentação da API
 
-<p></p>
+### Funcionalidades dos usuários em rotas públicas.
 
 <details>
-<summary><strong>Funcionalidades dos usuários em rotas públicas.</strong></summary>
-
-- #### Criar conta na rota /api/user/register
+<summary>Criar conta na rota /api/user/register</summary>
 
 <code>POST</code> <code>/api/user/register</code>
 
@@ -140,7 +138,10 @@ sail artisan serve
       "message": "User created successfully!"
     }
 
-- #### Logar na rota /api/user/login
+</details>
+
+<details>
+<summary>Logar na rota /api/user/login</summary>
 
 <code>POST</code> <code>/api/user/login</code>
 
@@ -158,15 +159,14 @@ sail artisan serve
       "token_type": "bearer",
       "expires_in": 3600
     }
-    
 </details>
 
 <hr>
 
-<details>
-<summary><strong>Funcionalidades dos usuários em rotas autenticadas.</strong></summary>
+### Funcionalidades dos usuários em rotas autenticadas.
 
-- #### Obter informações do usuário na rota /api/auth/user/me
+<details>
+<summary>Obter informações do usuário na rota /api/auth/user/me</summary>
 
 <code>GET</code> <code>/api/auth/user/me</code>
 
@@ -187,7 +187,10 @@ sail artisan serve
       "updated_at": "2024-07-15T23:49:44.000000Z"
     }
 
-- #### Atualizar token do usuário logado na rota /api/auth/user/refresh
+</details>
+
+<details>
+<summary>Atualizar token do usuário logado na rota /api/auth/user/refresh</summary>
 
 <code>POST</code> <code>/api/auth/user/refresh</code>
 
@@ -206,8 +209,10 @@ sail artisan serve
       "token_type": "bearer",
       "expires_in": 3600
     }
+</details>
 
-- #### Deslogar usuário na rota /api/auth/user/logout
+<details>
+<summary>Deslogar usuário na rota /api/auth/user/logout</summary>
 
 <code>POST</code> <code>/api/auth/user/logout</code>
 
@@ -229,10 +234,9 @@ sail artisan serve
 
 <hr>
 
+### Funcionalidades dos produtos.
 <details>
-<summary><strong>Funcionalidades dos produtos.</strong></summary>
-
-- #### Registrar produto na rota /api/auth/products/register
+<summary>Registrar produto na rota /api/auth/products/register</summary>
 
 <code>POST</code> <code>/api/auth/products/register</code>
 
@@ -257,8 +261,10 @@ sail artisan serve
     {
       "message": "Product created successfully!"
     }
+</details>
 
-- #### Listar todos os produtos ordenados alfabeticamente na rota /api/auth/products/
+<details>
+<summary>Listar todos os produtos ordenados alfabeticamente na rota /api/auth/products/</summary>
 
 <code>GET</code> <code>/api/auth/products/</code>
 
@@ -340,8 +346,10 @@ sail artisan serve
       "to": 3,
       "total": 3
     }
+</details>
 
-- #### Detalhes de um produto na rota /api/auth/products/id
+<details>
+<summary>Detalhes de um produto na rota /api/auth/products/id</summary>
 
 <code>GET</code> <code>/api/auth/products/id</code>
 
@@ -371,8 +379,10 @@ sail artisan serve
       "created_at": "2024-07-15T20:53:50.000000Z",
       "updated_at": "2024-07-15T21:11:48.000000Z"
     }
+</details>
 
-- #### Edição de um produto na rota /api/auth/products/update/id
+<details>
+<summary>Edição de um produto na rota /api/auth/products/update/id</summary>
 
 <code>PUT</code> <code>/api/auth/products/update/id</code>
 
@@ -402,8 +412,10 @@ sail artisan serve
     {
       "message": "Product updated successfully!"
     }
+</details>
 
-- #### Exclusão de um produto na rota /api/auth/products/delete/id
+<details>
+<summary>Exclusão de um produto na rota /api/auth/products/delete/id</summary>
 
 <code>DELETE</code> <code>/api/auth/products/delete/id</code>
 
@@ -424,8 +436,10 @@ sail artisan serve
     {
       "message": "Product deleted successfully!"
     }
+</details>
 
-- #### Restauração de um produto previamente excluído na rota /api/auth/products/restore/id
+<details>
+<summary>Restauração de um produto previamente excluído na rota /api/auth/products/restore/id</summary>
 
 <code>PATCH</code> <code>/api/auth/products/restore/id</code>
 
@@ -451,10 +465,9 @@ sail artisan serve
 
 <hr>
 
+### Funcionalidades dos clientes.
 <details>
-<summary><strong>Funcionalidades dos clientes.</strong></summary>
-
-- #### Registrar um(a) cliente na rota /api/auth/clients/register
+<summary>Registrar um(a) cliente na rota /api/auth/clients/register</summary>
 
 <code>POST</code> <code>/api/auth/clients/register</code>
 
@@ -484,7 +497,10 @@ sail artisan serve
       "message": "Client created successfully!"
     }
 
-- #### Listar todos os clientes ordenados por ID na rota /api/auth/clients/
+</details>
+
+<details>
+<summary>Listar todos os clientes ordenados por ID na rota /api/auth/clients/</summary>
 
 <code>GET</code> <code>/api/auth/clients/</code>
 
@@ -586,8 +602,10 @@ sail artisan serve
       "to": 2,
       "total": 2
     }
+</details>
 
-- #### Detalhar um(a) cliente e vendas a ele(a) com possibilidade de filtrar vendas por mes/ano na rota /api/auth/clients/id.
+<details>
+<summary>Detalhar um(a) cliente e vendas a ele(a) com possibilidade de filtrar vendas por mes/ano na rota /api/auth/clients/id.</summary>
 
 <code>GET</code> <code>/api/auth/clients/id</code>
 
@@ -641,8 +659,10 @@ sail artisan serve
         }
       ]
     }
+</details>
 
-- #### Editar um(a) cliente na rota /api/auth/clients/update/id
+<details>
+<summary>Editar um(a) cliente na rota /api/auth/clients/update/id</summary>
 
 <code>PUT</code> <code>/api/auth/clients/update/id</code>
 
@@ -675,8 +695,10 @@ sail artisan serve
     {
       "message": "Client updated successfully!"
     }
+</details>
 
-- #### Excluir um(a) cliente na rota /api/auth/clients/delete/id
+<details>
+<summary>Excluir um(a) cliente na rota /api/auth/clients/delete/id</summary>
 
 <code>DELETE</code> <code>/api/auth/clients/delete/id</code>
 
@@ -702,10 +724,9 @@ sail artisan serve
 
 <hr>
 
+### Funcionalidade das vendas.
 <details>
-<summary><strong>Funcionalidade das vendas.</strong></summary>
-
-- #### Registrar uma venda na rota /api/auth/sales/register
+<summary>Registrar uma venda na rota /api/auth/sales/register</summary>
 
 <code>POST</code> <code>/api/auth/sales/register</code>
 
@@ -730,8 +751,6 @@ sail artisan serve
     }
     
 </details>
-
-<br>
 
 ## Autor
 
